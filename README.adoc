@@ -1,0 +1,60 @@
+= Custom Lifecycle Maven Extension
+
+This extension enables you to define a custom build lifecycle (i.e. Maven lifecycle + Maven lifecycle mapping).
+In other words, it enables to define through descriptors how your modules are build and extend maven default packagings.
+
+IMPORTANT: PoC code, do not yet use it.
+
+== Configuration
+
+Configuration must be set in `${project.roo}/.extensions/custom/`.
+
+The file `mappings.xml` contains a component set where you can define custom lifecycle mappings:
+
+[source,xml]
+----
+<component-set>
+  <components>
+    <component>
+          <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+          <role-hint>my-mapping</role-hint>
+          <implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
+          <configuration>
+                <phases>
+                  <process-resources>org.apache.maven.plugins:maven-resources-plugin:resources</process-resources>
+                  <compile>org.apache.maven.plugins:maven-compiler-plugin:compile</compile>
+                  <process-test-resources>org.apache.maven.plugins:maven-resources-plugin:testResources</process-test-resources>
+                  <test-compile>org.apache.maven.plugins:maven-compiler-plugin:testCompile</test-compile>
+                  <test>org.apache.maven.plugins:maven-surefire-plugin:test</test>
+                  <package>org.apache.maven.plugins:maven-war-plugin:exploded</package>
+                  <install>org.apache.maven.plugins:maven-install-plugin:install</install>
+                  <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
+                </phases>
+          </configuration>
+    </component>
+  </components>
+</component-set>
+----
+
+The file `lifecycles.xml` contains custom lifecycles:
+
+[source,xml]
+----
+<lifecycles>
+  <lifecycle>
+    <id>my-lifecycle</id>
+    <phases>
+      <phase>
+        <id>package</id>
+        <executions>
+          <execution>
+            <goals>
+              <goal>my-mapping</goal>
+            </goals>
+          </execution>
+        </executions>
+      </phase>
+    </phases>
+  </lifecycle>
+</lifecycles>
+----

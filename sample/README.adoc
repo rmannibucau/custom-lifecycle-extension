@@ -1,0 +1,3 @@
+= Sample
+
+Create a custom packaging (close to jar one) which replaces surefire by junit-platform-plugin and renames test phase "junit-test" for demo purposes.
